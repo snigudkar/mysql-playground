@@ -9,6 +9,7 @@ function App() {
   const [sqlQuery, setSqlQuery] = useState("SELECT * FROM Customers;"); // Initial query
   const [queryResults, setQueryResults] = useState(null);
   const [queryError, setQueryError] = useState(null);
+  const [aiExplanation, setAiExplanation] = useState(null); // New state for AI explanation
   const [schema, setSchema] = useState({});
   const [loadingSchema, setLoadingSchema] = useState(true);
   const [loadingQuery, setLoadingQuery] = useState(false);
@@ -38,13 +39,13 @@ function App() {
 
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
-    // You can set up custom commands, keybindings here if needed
   };
 
   const executeSqlQuery = async () => {
     setLoadingQuery(true);
-    setQueryError(null); // Clear previous errors
-    setQueryResults(null); // Clear previous results
+    setQueryError(null);     // Clear previous errors
+    setAiExplanation(null); // Clear previous AI explanations
+    setQueryResults(null);   // Clear previous results
 
     try {
       const response = await fetch(`${API_BASE_URL}/execute-sql`, {
@@ -60,18 +61,22 @@ function App() {
       if (data.success) {
         setQueryResults(data.results);
       } else {
+        // If query failed, set both the raw error and AI explanation
         setQueryError(data.error);
+        setAiExplanation(data.aiExplanation || "AI explanation not available.");
       }
     } catch (error) {
       setQueryError(`Network error or unexpected response: ${error.message}`);
+      setAiExplanation("Could not reach backend for AI explanation.");
     } finally {
       setLoadingQuery(false);
     }
   };
 
   const resetDatabase = async () => {
-    setLoadingQuery(true); // Use loading query state for reset too
+    setLoadingQuery(true);
     setQueryError(null);
+    setAiExplanation(null);
     setQueryResults(null);
     try {
       const response = await fetch(`${API_BASE_URL}/reset-db`, {
@@ -79,19 +84,21 @@ function App() {
       });
       const data = await response.json();
       if (data.success) {
-        alert(data.message); // Simple alert for reset confirmation
+        // alert(data.message); // Replaced simple alert with UI feedback if desired
+        console.log(data.message); // Log to console
+        setQueryResults({ message: data.message }); // Display success message in results area
         // Re-fetch schema after reset to ensure it's up-to-date
-        // if any DDL operations were performed by user (though not common in playground)
-        // or if we wanted to show initial data again.
         await fetch(`${API_BASE_URL}/schema`).then(res => res.json()).then(d => {
           if(d.success) setSchema(d.schema);
         });
         setSqlQuery("SELECT * FROM Customers;"); // Reset query after DB reset
       } else {
         setQueryError(data.error);
+        setAiExplanation("Failed to reset database properly.");
       }
     } catch (error) {
       setQueryError(`Failed to reset database: ${error.message}`);
+      setAiExplanation("Network error during database reset.");
     } finally {
       setLoadingQuery(false);
     }
@@ -176,9 +183,9 @@ function App() {
             />
           </div>
 
-          <h2 className="text-2xl font-bold text-blue-300 mb-4">Query Results</h2>
-          <div className="flex-grow"> {/* This div ensures ResultDisplay takes available space */}
-            <ResultDisplay results={queryResults} error={queryError} />
+          <h2 className="text-2xl font-bold text-blue-300 mb-4">Query Results & AI Explanation</h2>
+          <div className="flex-grow">
+            <ResultDisplay results={queryResults} error={queryError} aiExplanation={aiExplanation} />
           </div>
         </section>
       </main>

@@ -4,16 +4,29 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config(); // Load environment variables from .env file
 
+// Import Google Generative AI SDK
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
-const DB_FILE = process.env.DB_FILE || 'playground.db'; // SQLite database file name
+const DB_FILE = process.env.DB_FILE || 'playground.db';
+
+// --- Gemini AI Setup ---
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+if (!GEMINI_API_KEY) {
+    console.error("GEMINI_API_KEY is not set in .env file. AI features will be disabled.");
+}
+const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
+// Use gemini-1.5-flash for faster responses
+const model = genAI ? genAI.getGenerativeModel({ model: "gemini-1.5-flash" }) : null;
+// -----------------------
+
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
 // Enable CORS for frontend to access backend
 app.use((req, res, next) => {
-    // In a production environment, replace '*' with your actual frontend origin (e.g., 'http://localhost:5173')
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -27,23 +40,19 @@ let db; // Variable to hold the database connection
 // Function to initialize the database with schema and data
 const initializeDatabase = () => {
     try {
-        // If DB file exists, delete it for a clean start on each initialization
         if (fs.existsSync(dbPath)) {
             fs.unlinkSync(dbPath);
             console.log(`Deleted existing database file: ${DB_FILE}`);
         }
 
-        // Open (or create) the SQLite database
         db = new Database(dbPath);
         console.log(`Database connected at ${DB_FILE}`);
 
-        // Read and execute the schema.sql file
         const schemaPath = path.join(__dirname, 'db', 'schema.sql');
         const schema = fs.readFileSync(schemaPath, 'utf8');
         db.exec(schema);
         console.log('Database schema and data initialized successfully.');
 
-        // For convenience, list tables and a few rows
         console.log('\n--- Initial Database State ---');
         const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';").all();
         console.log('Tables:', tables.map(t => t.name).join(', '));
@@ -65,15 +74,38 @@ const initializeDatabase = () => {
 
     } catch (err) {
         console.error('Error initializing database:', err.message);
-        process.exit(1); // Exit if database initialization fails
+        process.exit(1);
     }
 };
 
-// Initialize the database when the server starts
+// Global variable to store schema details for AI context
+let currentSchemaDetails = {};
+const fetchSchemaDetails = () => {
+    try {
+        const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';").all();
+        const schemaDetails = {};
+        tables.forEach(table => {
+            const columns = db.prepare(`PRAGMA table_info('${table.name}')`).all();
+            schemaDetails[table.name] = columns.map(col => ({
+                name: col.name,
+                type: col.type,
+                notnull: col.notnull,
+                pk: col.pk
+            }));
+        });
+        currentSchemaDetails = schemaDetails; // Store for AI use
+    } catch (error) {
+        console.error("Error fetching schema details for AI context:", error.message);
+    }
+}
+
+
+// Initialize the database and fetch schema details on server start
 initializeDatabase();
+fetchSchemaDetails(); // Initial schema fetch
 
 // Endpoint to execute SQL queries
-app.post('/api/execute-sql', (req, res) => {
+app.post('/api/execute-sql', async (req, res) => { // Added 'async' keyword here
     const { query } = req.body;
 
     if (!query) {
@@ -84,51 +116,66 @@ app.post('/api/execute-sql', (req, res) => {
         let result;
         const statement = db.prepare(query);
 
-        // Attempt to get results (for SELECT queries)
-        // Check if the query is a SELECT, otherwise use .run() for DML/DDL
         if (query.trim().toUpperCase().startsWith('SELECT')) {
              result = statement.all();
         } else {
-            // For INSERT, UPDATE, DELETE, CREATE TABLE, etc.
             result = statement.run();
         }
 
         res.json({
             success: true,
-            results: result // This will be array of objects for SELECT, or { changes, lastInsertRowid } for DML
+            results: result
         });
 
     } catch (error) {
-        // Catch SQL errors and send them back to the frontend
+        let aiExplanation = null;
+        if (model) { // Only try to call AI if model is initialized
+            try {
+                const prompt = `You are an expert SQL error debugger for SQLite databases.
+                The user provided an SQL query and it resulted in an error.
+                Your task is to explain the error message in simple terms for a beginner,
+                and suggest common ways to fix it, referencing the provided schema where helpful.
+                Focus on being concise and actionable.
+
+                Database Schema (JSON):
+                ${JSON.stringify(currentSchemaDetails, null, 2)}
+
+                User's SQL Query:
+                ${query}
+
+                Raw Error Message:
+                ${error.message}
+
+                Please provide only the explanation and fix suggestions. Do not generate code directly unless demonstrating a fix.`;
+
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                aiExplanation = response.text();
+
+            } catch (aiError) {
+                console.error("Error generating AI explanation:", aiError);
+                aiExplanation = "Failed to get AI explanation: " + aiError.message;
+            }
+        } else {
+             aiExplanation = "AI features are disabled due to missing GEMINI_API_KEY.";
+        }
+
+
         res.status(400).json({
             success: false,
-            error: error.message
+            error: error.message,
+            aiExplanation: aiExplanation // Send AI explanation
         });
     }
 });
 
 // Endpoint to get database schema (table names and columns)
+// This endpoint is already functional, no changes needed for AI.
 app.get('/api/schema', (req, res) => {
     try {
-        // Query to get table names
-        const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';").all();
-
-        const schemaDetails = {};
-        tables.forEach(table => {
-            // Query to get column information for each table
-            // PRAGMA table_info(table_name) returns column details
-            const columns = db.prepare(`PRAGMA table_info('${table.name}')`).all();
-            schemaDetails[table.name] = columns.map(col => ({
-                name: col.name,
-                type: col.type,
-                notnull: col.notnull,
-                pk: col.pk
-            }));
-        });
-
         res.json({
             success: true,
-            schema: schemaDetails
+            schema: currentSchemaDetails // Return the cached schema details
         });
     } catch (error) {
         res.status(500).json({
@@ -139,14 +186,14 @@ app.get('/api/schema', (req, res) => {
 });
 
 // Endpoint to reset the database
-app.post('/api/reset-db', (req, res) => {
+app.post('/api/reset-db', async (req, res) => { // Added 'async'
     try {
-        // It's good practice to ensure the database is closed before deleting/re-initializing
         if (db) {
             db.close();
             console.log('Database connection closed for reset.');
         }
         initializeDatabase(); // Re-initialize
+        fetchSchemaDetails(); // Re-fetch schema details after reset for AI context
         res.json({
             success: true,
             message: "Database reset successfully."
