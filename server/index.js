@@ -209,7 +209,12 @@ app.post('/api/reset-db', async (req, res) => { // Added 'async'
 
 
 // Start the server
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+// app.listen(PORT, () => {
+//     console.log(`Server running on http://localhost:${PORT}`);
+//     console.log(`Frontend will typically run on http://localhost:5173 (Vite default)`);
+// });
+app.listen(PORT, '0.0.0.0', () => { // Changed here: added '0.0.0.0'
+    console.log(`Server running on http://0.0.0.0:${PORT}`); // Log updated for clarity
     console.log(`Frontend will typically run on http://localhost:5173 (Vite default)`);
+    console.log(`Access your backend API at: http://0.0.0.0:${PORT}/api/schema`); // Added for clarity
 });

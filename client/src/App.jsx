@@ -6,7 +6,7 @@ import { Database, Play, BookOpen, Trophy, Code, Users, Target, Zap, Brain, Refr
 
 
 // Backend server URL
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://mysql-playground.onrender.com/api';
 // Local Storage Key (No longer used for query history, but kept for clarity if other local storage is added)
 // const QUERY_HISTORY_KEY = 'sqlPlaygroundQueryHistory'; // Removed as query history is removed
 
