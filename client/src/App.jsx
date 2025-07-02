@@ -7,8 +7,7 @@ import { Database, Play, BookOpen, Trophy, Code, Users, Target, Zap, Brain, Refr
 
 // Backend server URL
 const API_BASE_URL = 'https://mysql-playground.onrender.com/api';
-// Local Storage Key (No longer used for query history, but kept for clarity if other local storage is added)
-// const QUERY_HISTORY_KEY = 'sqlPlaygroundQueryHistory'; // Removed as query history is removed
+
 
 function App() {
   const [sqlQuery, setSqlQuery] = useState("SELECT * FROM Customers;"); // Initial query
@@ -20,21 +19,7 @@ function App() {
   const [loadingQuery, setLoadingQuery] = useState(false);
   const editorRef = useRef(null);
 
-  // State for query history and its visibility (REMOVED)
-  // const [queryHistory, setQueryHistory] = useState([]);
-  // const [isHistoryCollapsed, setIsHistoryCollapsed] = useState(true);
-
-
-  // --- Background Animation States and Logic (REMOVED) ---
-  // const [stars, setStars] = useState([]); // Removed stars state
-  // No useEffect for background animation anymore
-
-  // --- Local Storage Hooks for Query History (REMOVED) ---
-  // useEffect(() => { /* Removed */ }, []);
-  // useEffect(() => { /* Removed */ }, []);
-  // ------------------------------------------
-
-  // Fetch schema on component mount
+  
   useEffect(() => {
     const fetchSchema = async () => {
       setLoadingSchema(true);
@@ -122,25 +107,19 @@ function App() {
     }
   };
 
-  // loadQueryFromHistory function removed
-  // const loadQueryFromHistory = (queryToLoad) => { /* Removed */ };
-
-  // clearHistory function removed
-  // const clearHistory = () => { /* Removed */ };
+ 
 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 text-white overflow-hidden relative font-sans">
-      {/* Dynamic Animated Background (REMOVED: Stars and Constellations) */}
-      {/* The entire fixed inset-0 div for background animations is removed */}
+     
 
-      {/* Main Content Wrapper */}
+     
       <div className="relative z-10 p-6 flex flex-col items-center min-h-screen">
         {/* Header */}
         <header className="text-center mb-8 w-full max-w-4xl">
-          <h1 className="text-5xl md:text-6xl font-extrabold text-blue-400 drop-shadow-lg mb-2 bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-            SQL Playground
-          </h1>
+          <h4 className="text-3xl md:text-5xl font-extrabold text-blue-400 drop-shadow-lg mb-2 bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+QueryQuest - A MySQL Playground</h4>
           <p className="text-lg md:text-xl text-gray-300">
             Write, test, and debug SQL queries with AI assistance.
           </p>
@@ -179,7 +158,7 @@ function App() {
               </div>
             )}
 
-            {/* Reset Database Button (Moved up from mt-auto div, now directly at the end of section) */}
+            
             <div className="mt-auto text-center"> {/* Kept mt-auto for alignment, but removed query history content */}
               <button
                 onClick={resetDatabase}
@@ -241,9 +220,8 @@ function App() {
           </section>
         </div>
 
-        {/* Footer (REMOVED) */}
-        {/* The entire footer element is removed */}
-      </div> {/* End of main content wrapper */}
+        
+      </div> 
     </div>
   );
 }
