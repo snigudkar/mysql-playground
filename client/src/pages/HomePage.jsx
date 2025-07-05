@@ -67,7 +67,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated }) => {
           </button>
         </div>
 
-        {/* Login/Signup Cards (Conditional) */}
+        {/* Login/Signup Cards (Conditional)
         {!isAuthenticated && (
           <>
             <div
@@ -95,7 +95,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated }) => {
               </button>
             </div>
           </>
-        )}
+        )} */}
       </div>
     </div>
   );
