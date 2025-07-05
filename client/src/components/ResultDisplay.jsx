@@ -1,3 +1,4 @@
+// client/src/components/ResultDisplay.jsx
 import React from 'react';
 
 const ResultDisplay = ({ results, error, aiExplanation }) => {
@@ -33,7 +34,7 @@ const ResultDisplay = ({ results, error, aiExplanation }) => {
         {results.lastInsertRowid !== undefined && results.lastInsertRowid > 0 && (
           <p>Last inserted row ID: <span className="font-bold">{results.lastInsertRowid}</span></p>
         )}
-        {results.message && ( // For the reset database message
+        {results.message && (
           <p>{results.message}</p>
         )}
       </div>
