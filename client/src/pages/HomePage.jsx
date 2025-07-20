@@ -307,7 +307,7 @@ const HomePage = () => {
             </div>
           ) : (
             <div className="max-w-2xl mx-auto text-lg text-gray-400 mb-16">
-              Log in to track your progress, earn achievements, and personalize your learning journey!
+              Learn SQL interactively with hands-on practice, lessons, and quizzes.
             </div>
           )}
 
