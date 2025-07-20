@@ -152,108 +152,206 @@
 // };
 
 // export default ProfilePage;
+
+//shreyas changes
+
+// import React, { useEffect, useState } from 'react';
+// import { User } from 'lucide-react';
+// import useAuth from '../hooks/useAuth';
+
+// const ProfilePage = () => {
+//   const { user, isLoggedIn, isAuthReady } = useAuth();
+//   const [profileData, setProfileData] = useState(null);
+
+//   // useEffect(() => {
+//   //   if (isAuthReady && user?.uid) {
+//   //     // fetch(`http://localhost:5000/api/user-profile/${user.uid}`)
+//   //     fetch(`http://localhost:5000/api/user-profile/${user.uid}`)
+//   //       .then((res) => res.json())
+//   //       .then((data) => setProfileData(data))
+//   //       .catch((err) => console.error("Error fetching user profile:", err));
+//   //   }
+//   // }, [isAuthReady, user]);
+//   useEffect(() => {
+//   if (isAuthReady && user?.email) {
+//     fetch(`http://localhost:5000/api/user-profile/${user.email}`)
+//       .then((res) => res.json())
+//       .then((data) => setProfileData(data))
+//       .catch((err) => console.error("Error fetching user profile:", err));
+//   }
+// }, [isAuthReady, user]);
+
+
+//   if (!isAuthReady) return <div className="text-white">Checking login...</div>;
+//   if (!isLoggedIn) return <div className="text-white">Please log in to view your profile.</div>;
+//   if (!profileData) return <div className="text-white">Loading profile data...</div>;
+
+//   return (
+//     <div className="min-h-screen bg-gray-900 text-white">
+//       <div className="shadow-sm border-b border-gray-700 bg-gray-800">
+//         <div className="max-w-7xl mx-auto px-4 py-6">
+//           <div className="flex items-center gap-4">
+//             <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+//               <User className="w-8 h-8 text-white" />
+//             </div>
+//             <div>
+//               <h1 className="text-2xl font-bold text-white">{user.displayName || "User"}</h1>
+//               <p className="text-gray-400">{user.email}</p>
+//               <p className="text-sm text-gray-500">
+//                 Member since {new Date(profileData.joinDate).toLocaleDateString()}
+//               </p>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="max-w-7xl mx-auto px-4 py-8">
+//         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+//           {/* Left Column - Stats */}
+//           <div className="lg:col-span-1 space-y-6">
+//             <div className="rounded-lg shadow p-6 bg-gray-800">
+//               <h2 className="text-lg font-semibold mb-4 text-white">Quick Stats</h2>
+//               <div className="grid grid-cols-2 gap-4">
+//                 <div className="text-center">
+//                   <div className="text-2xl font-bold text-blue-500">{profileData.streak}</div>
+//                   <div className="text-sm text-gray-400">Day Streak</div>
+//                 </div>
+//                 <div className="text-center">
+//                   <div className="text-2xl font-bold text-green-500">{profileData.totalQueries}</div>
+//                   <div className="text-sm text-gray-400">Total Queries</div>
+//                 </div>
+//                 <div className="text-center">
+//                   <div className="text-2xl font-bold text-purple-500">{profileData.coursesCompleted}</div>
+//                   <div className="text-sm text-gray-400">Courses Done</div>
+//                 </div>
+//                 <div className="text-center">
+//                   <div className="text-2xl font-bold text-orange-500">{profileData.achievements?.length || 0}</div>
+//                   <div className="text-sm text-gray-400">Achievements</div>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* Right Column - Achievements */}
+//           <div className="lg:col-span-2 space-y-6">
+//             <div className="rounded-lg shadow p-6 bg-gray-800">
+//               <h2 className="text-lg font-semibold mb-4 text-white">Achievements</h2>
+//               {profileData.achievements?.length > 0 ? (
+//                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//                   {profileData.achievements.map((achievement) => (
+//                     <div key={achievement.id} className="flex items-center gap-3 p-3 rounded-lg bg-gray-700">
+//                       <div className="text-2xl">{achievement.icon}</div>
+//                       <div className="flex-1">
+//                         <div className="font-medium text-white">{achievement.name}</div>
+//                         <div className="text-sm text-gray-400">{achievement.description}</div>
+//                         <div className="text-xs mt-1 text-gray-500">
+//                           Earned {new Date(achievement.earnedAt).toLocaleDateString()}
+//                         </div>
+//                       </div>
+//                     </div>
+//                   ))}
+//                 </div>
+//               ) : (
+//                 <p className="text-gray-400">No achievements yet.</p>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ProfilePage;
+
+
+
+// import React from 'react';
+// import { User } from 'lucide-react';
+// import useAuth from '../hooks/useAuth';
+
+// const ProfilePage = () => {
+//   const { user, isLoggedIn, isAuthReady } = useAuth();
+
+//   if (!isAuthReady) return <div className="text-white text-center mt-10">Checking login...</div>;
+//   if (!isLoggedIn) return <div className="text-white text-center mt-10">Please log in to view your profile.</div>;
+
+//   return (
+//     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center px-4">
+//       <div className="bg-gray-800 rounded-2xl p-8 shadow-xl hover:shadow-blue-500/20 transition duration-500 transform hover:scale-105 animate-fade-in-up w-full max-w-md text-center">
+
+//         <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+//           <User className="w-10 h-10 text-white" />
+//         </div>
+
+//         <h1 className="text-xl font-semibold text-white mb-1">Logged in as</h1>
+//         <p className="text-gray-300 break-all">{user.email}</p>
+
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ProfilePage;
+
+
 import React, { useEffect, useState } from 'react';
-import { User } from 'lucide-react';
+import { User, Zap } from 'lucide-react';
 import useAuth from '../hooks/useAuth';
+import { getUserProgress } from '../services/api';
 
 const ProfilePage = () => {
   const { user, isLoggedIn, isAuthReady } = useAuth();
-  const [profileData, setProfileData] = useState(null);
+  const [xp, setXp] = useState(null);
 
-  // useEffect(() => {
-  //   if (isAuthReady && user?.uid) {
-  //     // fetch(`http://localhost:5000/api/user-profile/${user.uid}`)
-  //     fetch(`http://localhost:5000/api/user-profile/${user.uid}`)
-  //       .then((res) => res.json())
-  //       .then((data) => setProfileData(data))
-  //       .catch((err) => console.error("Error fetching user profile:", err));
-  //   }
-  // }, [isAuthReady, user]);
   useEffect(() => {
-  if (isAuthReady && user?.email) {
-    fetch(`http://localhost:5000/api/user-profile/${user.email}`)
-      .then((res) => res.json())
-      .then((data) => setProfileData(data))
-      .catch((err) => console.error("Error fetching user profile:", err));
+    const fetchXP = async () => {
+      if (isAuthReady && isLoggedIn && user?.uid) {
+        try {
+          const progress = await getUserProgress('sql-basics', user.uid);
+          setXp(progress.totalXP || 0);
+        } catch (error) {
+          console.error('Error fetching XP:', error);
+        }
+      }
+    };
+
+    fetchXP();
+  }, [isAuthReady, isLoggedIn, user]);
+
+  if (!isAuthReady) {
+    return (
+      <div className="text-white text-center mt-10">
+        Checking login...
+      </div>
+    );
   }
-}, [isAuthReady, user]);
 
-
-  if (!isAuthReady) return <div className="text-white">Checking login...</div>;
-  if (!isLoggedIn) return <div className="text-white">Please log in to view your profile.</div>;
-  if (!profileData) return <div className="text-white">Loading profile data...</div>;
+  if (isAuthReady && !isLoggedIn) {
+    return (
+      <div className="text-white text-center mt-10">
+        Please log in to view your profile.
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="shadow-sm border-b border-gray-700 bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <User className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white">{user.displayName || "User"}</h1>
-              <p className="text-gray-400">{user.email}</p>
-              <p className="text-sm text-gray-500">
-                Member since {new Date(profileData.joinDate).toLocaleDateString()}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center px-4">
+      <div className="bg-gray-800 rounded-2xl p-8 shadow-xl hover:shadow-blue-500/20 transition duration-500 transform hover:scale-105 animate-fade-in-up w-full max-w-md text-center">
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Stats */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="rounded-lg shadow p-6 bg-gray-800">
-              <h2 className="text-lg font-semibold mb-4 text-white">Quick Stats</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-500">{profileData.streak}</div>
-                  <div className="text-sm text-gray-400">Day Streak</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-500">{profileData.totalQueries}</div>
-                  <div className="text-sm text-gray-400">Total Queries</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-500">{profileData.coursesCompleted}</div>
-                  <div className="text-sm text-gray-400">Courses Done</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-500">{profileData.achievements?.length || 0}</div>
-                  <div className="text-sm text-gray-400">Achievements</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Achievements */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="rounded-lg shadow p-6 bg-gray-800">
-              <h2 className="text-lg font-semibold mb-4 text-white">Achievements</h2>
-              {profileData.achievements?.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {profileData.achievements.map((achievement) => (
-                    <div key={achievement.id} className="flex items-center gap-3 p-3 rounded-lg bg-gray-700">
-                      <div className="text-2xl">{achievement.icon}</div>
-                      <div className="flex-1">
-                        <div className="font-medium text-white">{achievement.name}</div>
-                        <div className="text-sm text-gray-400">{achievement.description}</div>
-                        <div className="text-xs mt-1 text-gray-500">
-                          Earned {new Date(achievement.earnedAt).toLocaleDateString()}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-400">No achievements yet.</p>
-              )}
-            </div>
-          </div>
+        <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+          <User className="w-10 h-10 text-white" />
         </div>
+
+        <h1 className="text-xl font-semibold text-white mb-1">Logged in as</h1>
+        <p className="text-gray-300 break-all mb-4">{user.email}</p>
+
+        {xp !== null && (
+          <div className="flex justify-center items-center gap-2 mt-4">
+            <Zap className="w-5 h-5 text-yellow-400" />
+            <span className="text-yellow-400 font-semibold">{xp} XP earned</span>
+          </div>
+        )}
       </div>
     </div>
   );

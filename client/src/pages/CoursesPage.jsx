@@ -1143,14 +1143,33 @@ const CoursesPage = () => {
     }
   };
 
-  if (!user || !courseData || !lessons.length || !userProgress) {
-    return (
-      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-        <Clock className="w-8 h-8 animate-spin text-blue-400" />
-        <span className="ml-3 text-lg">Loading course...</span>
-      </div>
-    );
-  }
+  if (!isAuthReady) {
+  return (
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+      <Clock className="w-8 h-8 animate-spin text-blue-400" />
+      <span className="ml-3 text-lg">Loading course...</span>
+    </div>
+  );
+}
+
+if (!user) {
+  return (
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+      <Lock className="w-8 h-8 text-red-500 mr-3" />
+      <span className="text-lg">Please log in to view courses.</span>
+    </div>
+  );
+}
+
+if (!courseData || !lessons.length || !userProgress) {
+  return (
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+      <Clock className="w-8 h-8 animate-spin text-blue-400" />
+      <span className="ml-3 text-lg">Loading course...</span>
+    </div>
+  );
+}
+
 
   const isCourseCompleted =
     currentLessonIndex === lessons.length - 1 && lessonCompletedStatus;
@@ -1173,10 +1192,10 @@ const CoursesPage = () => {
               <Zap className="w-5 h-5 text-yellow-400" />
               <span className="text-yellow-400 font-semibold">{userProgress.totalXP} XP</span>
             </div>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <Trophy className="w-5 h-5 text-orange-400" />
               <span className="text-orange-400 font-semibold">{userProgress.streak} day streak</span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

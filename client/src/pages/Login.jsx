@@ -16,7 +16,7 @@ const Login = () => {
     setError(null); // Clear previous errors
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/playground"); // Redirect to the playground after successful login
+      navigate("/"); // Redirect to the playground after successful login
     } catch (error) {
       console.error("Login failed:", error);
       // More user-friendly error messages

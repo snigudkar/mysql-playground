@@ -246,7 +246,7 @@ const PlaygroundPage = ({ userId, isAuthenticated, isAuthReady }) => {
  {/* Added pt-20 for fixed nav */}
       <header className="text-center mb-8 w-full max-w-4xl">
         <h1 className="text-5xl md:text-6xl font-extrabold text-blue-400 drop-shadow-lg mb-2 bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-          SQL Editor
+          SQL Playground
         </h1>
         <p className="text-lg md:text-xl text-gray-300">
           Write, test, and debug SQL queries with AI assistance.

@@ -1,7 +1,7 @@
 // client/src/pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Database, Play, BookOpen, Trophy, Code, Users, Clock, Target, Zap, Brain, LogIn, User } from 'lucide-react';
+import { Database, Play, BookOpen, Trophy, Code, Users, Clock, Target, Zap, Brain, LogIn, User ,Puzzle} from 'lucide-react';
 import useAuth from '../hooks/useAuth';
 import { getUserSummary } from '../services/api';
 
@@ -139,13 +139,25 @@ const HomePage = () => {
       path: '/playground' // This will now go to PlaygroundDashboardPage
     },
     {
+      id: 'mystery-games',
+      title: 'Mystery Games',
+      subtitle: 'Solve Cases with SQL',
+      description: 'Interactive mystery games that challenge your MySQL skills',
+      icon: <Puzzle className="w-12 h-12" />, // You can change this to any icon you prefer
+      gradient: 'from-purple-600 to-violet-700',
+      hoverGradient: 'from-purple-500 to-violet-600',
+      path: 'https://dbms-render.vercel.app/', // Replace with your actual URL
+      external: true // Optional: Add this if you're handling external links differently
+    },
+    {
       id: 'courses',
       title: 'Mini Courses',
       subtitle: 'Comprehensive Learning Paths',
       description: 'Structured lessons to guide you from SQL basics to advanced topics',
       icon: <BookOpen className="w-12 h-12" />,
-      gradient: 'from-emerald-600 to-teal-700',
-      hoverGradient: 'from-emerald-500 to-teal-600',
+      gradient: 'from-purple-600 to-violet-700',
+      hoverGradient: 'from-purple-500 to-violet-600',
+      
       path: '/courses'
     },
     {
@@ -154,44 +166,14 @@ const HomePage = () => {
       subtitle: 'External References & Tools',
       description: 'Curated list of external tutorials, documentation, and useful tools',
       icon: <BookOpen className="w-12 h-12" />, // Changed icon from Link2 to BookOpen to match your code
-      gradient: 'from-purple-600 to-violet-700',
-      hoverGradient: 'from-purple-500 to-violet-600',
+      gradient: 'from-emerald-600 to-teal-700',
+      hoverGradient: 'from-emerald-500 to-teal-600',
       path: '/resources'
     }
+    
   ];
 
-  const mysteries = [
-    {
-      id: 1,
-      title: "Stolen Symphony",
-      subtitle: "The Detective's First Case",
-      description: "A music database mystery where you'll learn SELECT, WHERE, and JOIN operations",
-      difficulty: "Beginner",
-      time: "45 mins",
-      icon: "🎭",
-      completed: false
-    },
-    {
-      id: 2,
-      title: "The Vanished Database",
-      subtitle: "Data Recovery Mission",
-      description: "Advanced queries and data restoration techniques in a corporate espionage thriller",
-      difficulty: "Intermediate",
-      time: "60 mins",
-      icon: "🔍",
-      completed: false
-    },
-    {
-      id: 3,
-      title: "The Silent Schema",
-      subtitle: "Uncover Hidden Connections",
-      description: "Complex relationships and subqueries in a web of corporate secrets",
-      difficulty: "Advanced",
-      time: "90 mins",
-      icon: "🕵",
-      completed: false
-    }
-  ];
+  
 
   const features = [
     {
@@ -283,13 +265,13 @@ const HomePage = () => {
         <div className="text-center py-16 px-6">
           <div className="mb-8">
             <h1 className="text-8xl font-black mb-4 tracking-wider">
-              <span className="text-white drop-shadow-2xl">THE </span>
+              <span className="text-white drop-shadow-2xl"> </span>
               <span className="bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent animate-pulse">
-                SQL
+                Query
               </span>
             </h1>
             <h2 className="text-7xl font-black italic bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-8">
-              MASTERY
+              Quest
             </h2>
           </div>
 
@@ -311,11 +293,11 @@ const HomePage = () => {
                   <span className="text-3xl font-bold text-yellow-300">{userSummary.totalXP || 0}</span>
                   <span className="text-gray-400 text-sm">Total XP</span>
                 </div>
-                <div className="flex flex-col items-center">
+                {/* <div className="flex flex-col items-center">
                   <Trophy className="w-10 h-10 text-orange-400 mb-2" />
                   <span className="text-3xl font-bold text-orange-300">{userSummary.streak || 0}</span>
                   <span className="text-gray-400 text-sm">Day Streak</span>
-                </div>
+                </div> */}
                 <div className="flex flex-col items-center">
                   <BookOpen className="w-10 h-10 text-green-400 mb-2" />
                   <span className="text-3xl font-bold text-green-300">{userSummary.completedLessons?.length || 0}</span>
@@ -331,78 +313,47 @@ const HomePage = () => {
 
         </div>
 
-        {/* Main Sections */}
-        <div className="px-6 mb-20">
-          <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {mainSections.map(section => (
-              <div
-                key={section.id}
-                onClick={() => navigate(section.path)}
-                className={`bg-gradient-to-br ${section.gradient}/10 backdrop-blur-md border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all duration-500 hover:transform hover:scale-105 cursor-pointer group overflow-hidden relative`}
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${section.hoverGradient}/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-                <div className="relative z-10">
-                  <div className={`text-transparent bg-clip-text bg-gradient-to-r ${section.gradient} mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                    {section.icon}
-                  </div>
-                  <h3 className="text-3xl font-bold mb-3 text-white group-hover:text-purple-300 transition-colors duration-300">
-                    {section.title}
-                  </h3>
-                  <p className="text-gray-400 mb-4 font-medium">{section.subtitle}</p>
-                  <p className="text-gray-300 mb-6 leading-relaxed">{section.description}</p>
-                  <button className={`w-full bg-gradient-to-r ${section.gradient} hover:${section.hoverGradient} py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl`}>
-                    Explore Now
-                  </button>
-                </div>
+      
+
+      <div className="px-6 mb-20">
+      <div className="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+        {mainSections.map(section => (
+          <div
+            key={section.id}
+            onClick={() => {
+              if (section.external) {
+                window.open(section.path, '_blank', 'noopener,noreferrer');
+              } else {
+                navigate(section.path);
+              }
+            }}
+            className={`bg-gradient-to-br ${section.gradient}/10 backdrop-blur-md border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all duration-500 hover:transform hover:scale-105 cursor-pointer group overflow-hidden relative`}
+          >
+            <div className={`absolute inset-0 bg-gradient-to-br ${section.hoverGradient}/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+            <div className="relative z-10">
+              {/* <div className={`text-transparent bg-clip-text bg-gradient-to-r ${section.gradient} mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                {section.icon}
+              </div> */}
+              <div className="mb-6 group-hover:scale-110 transition-transform duration-300">
+                {React.cloneElement(section.icon, { className: "w-12 h-12 text-white" })}
               </div>
-            ))}
+
+              <h3 className="text-3xl font-bold mb-3 text-white group-hover:text-purple-300 transition-colors duration-300">
+                {section.title}
+              </h3>
+              <p className="text-gray-400 mb-4 font-medium">{section.subtitle}</p>
+              <p className="text-gray-300 mb-6 leading-relaxed">{section.description}</p>
+              <button className={`w-full bg-gradient-to-r ${section.gradient} hover:${section.hoverGradient} py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl`}>
+                Explore Now
+              </button>
+            </div>
           </div>
-        </div>
+        ))}
+      </div>
+    </div>
 
-        {/* Mystery Games Section */}
-        <div className="px-6 mb-20">
-          <h3 className="text-5xl font-bold text-center mb-4 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-            Detective Mysteries
-          </h3>
-          <p className="text-center text-gray-400 mb-12 text-lg">Solve crimes while mastering SQL</p>
 
-          <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {mysteries.map(mystery => (
-              <div
-                key={mystery.id}
-                className="bg-gradient-to-br from-gray-900/80 to-purple-900/20 backdrop-blur-md border border-purple-500/20 rounded-2xl p-6 hover:border-purple-400/40 transition-all duration-500 hover:transform hover:scale-105 cursor-pointer group"
-              >
-                <div className="text-6xl mb-4 group-hover:animate-bounce transition-all duration-300">
-                  {mystery.icon}
-                </div>
-                <h4 className="text-2xl font-bold mb-2 text-white group-hover:text-purple-300 transition-colors">
-                  {mystery.title}
-                </h4>
-                <p className="text-purple-300 mb-3 italic font-medium">{mystery.subtitle}</p>
-                <p className="text-gray-300 mb-6 leading-relaxed">{mystery.description}</p>
-
-                <div className="flex justify-between items-center mb-4">
-                  <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                    mystery.difficulty === 'Beginner' ? 'bg-green-600/30 text-green-300 border border-green-500/30' :
-                    mystery.difficulty === 'Intermediate' ? 'bg-yellow-600/30 text-yellow-300 border border-yellow-500/30' :
-                    'bg-red-600/30 text-red-300 border border-red-500/30'
-                  }`}>
-                    {mystery.difficulty}
-                  </span>
-                  <span className="text-gray-400 flex items-center">
-                    <Clock className="w-4 h-4 mr-2" />
-                    {mystery.time}
-                  </span>
-                </div>
-
-                <button className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl flex items-center justify-center">
-                  <Play className="w-5 h-5 mr-2" />
-                  Start Investigation
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
+        
 
         {/* Features Section */}
         <div className="px-6 mb-20">
@@ -429,7 +380,7 @@ const HomePage = () => {
               Unmask the queries. Recover the knowledge. Restore the mastery.
             </p>
             <p className="text-gray-400">
-              © 2025 SQL Mastery Hub. Master SQL through interactive mysteries and real-world challenges.
+              © 2025 QueryQuest. Master SQL through interactive mysteries and real-world challenges.
             </p>
           </div>
           <div className="flex justify-center space-x-6 mt-6">

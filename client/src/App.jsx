@@ -272,7 +272,7 @@ import ProfilePage from './pages/ProfilePage';
 import useAuth from './hooks/useAuth';
 
 // Import Lucide React icons for global navigation
-import { LogOut, User, Database, Code, BookOpen, Link2, LogIn } from 'lucide-react';
+import { LogOut, User, Database, Code, BookOpen, Link2, LogIn, Zap} from 'lucide-react';
 
 // Global Navigation Component
 const AppNav = () => {
@@ -280,7 +280,9 @@ const AppNav = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="flex justify-between items-center p-4 backdrop-blur-md bg-black/30 border-b border-purple-500/20 text-white fixed top-0 left-0 w-full z-50">
+    <nav className="flex justify-between items-center p-4 bg-black border-b border-purple-500/20 text-white fixed top-0 left-0 w-full z-50">
+
+
       <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
         <div className="relative">
           <Database className="w-8 h-8 text-purple-400" />
@@ -288,7 +290,7 @@ const AppNav = () => {
         </div>
         <div>
           <span className="text-xl font-bold bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-            SQL Mastery Hub
+            QueryQuest
           </span>
         </div>
       </div>
@@ -305,6 +307,14 @@ const AppNav = () => {
         >
           <Code className="w-5 h-5 mr-2" /> Playground
         </button>
+         <a
+            href="https://dbms-render.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-purple-400 transition-colors duration-300 text-lg flex items-center text-gray-300"
+          >
+            <Zap className="w-5 h-5 mr-2" /> Mystery Games
+          </a>
         <button
           className="hover:text-purple-400 transition-colors duration-300 text-lg flex items-center text-gray-300"
           onClick={() => navigate('/courses')}
@@ -353,7 +363,7 @@ const App = () => {
   if (!isAuthReady) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
-        Loading authentication...
+        Loading...
       </div>
     );
   }
@@ -368,7 +378,7 @@ const App = () => {
           {/* Route for the Playground Dashboard */}
           <Route
             path="/playground"
-            element={<PlaygroundHomePage isAuthenticated={isLoggedIn} userId={user?.uid} />}
+            element={<PlaygroundPage isAuthenticated={isLoggedIn} userId={user?.uid} />}
           />
           {/* Route for the actual SQL Editor */}
           <Route
